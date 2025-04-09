@@ -78,22 +78,32 @@ class TeachingTest(Helper):
         self.recording = False
         self.playing = False
         self.record_list = []
+        self.record_gripper_list = []
         self.record_t = None
         self.play_t = None
 
+    def home(self):
+        self.mc.set_encoders([122,2053,1929,1900,928,2470], 80)
+        self.mc.set_gripper_value(90,80)
+        
+        
     def record(self):
         self.record_list = []
+        self.record_gripper_list = []
         self.recording = True
         self.mc.set_fresh_mode(0)
         def _record():
             start_t = time.time()
-
             while self.recording:
                 angles = self.mc.get_encoders()
+                gripper_value = self.mc.get_gripper_value()
                 if angles:
                     self.record_list.append(angles)
+                    self.record_gripper_list.append([gripper_value])
                     time.sleep(0.1)
-                    print("\r {}".format(time.time() - start_t), end="")
+                    print("\r angles{}".format(angles), end="\n")
+                    print("\r gripper_value{}".format(gripper_value), end="\n")
+                    
 
         self.echo("Start recording.")
         self.record_t = threading.Thread(target=_record, daemon=True)
@@ -107,9 +117,13 @@ class TeachingTest(Helper):
 
     def play(self):
         self.echo("Start play")
-        for angles in self.record_list:
+        for angles,gripper_value in zip(self.record_list,self.record_gripper_list):
             # print(angles)
             self.mc.set_encoders(angles, 80)
+            print(f"gripper value during play: {gripper_value[0]}")
+            if gripper_value[0] == None:
+                gripper_value[0] = 50
+            self.mc.set_gripper_value(gripper_value[0] - 20,80)
             time.sleep(0.1)
         self.echo("Finish play")
 
@@ -165,6 +179,7 @@ class TeachingTest(Helper):
         \r s: save to local
         \r l: load from local
         \r f: release mycobot
+        \r h: home mycobot
         \r----------------------------------
             """
         )
@@ -182,6 +197,7 @@ class TeachingTest(Helper):
                 elif key == "c":  # stop recorder
                     self.stop_record()
                 elif key == "p":  # play
+                    self.home()
                     self.play()
                 elif key == "P":  # loop play
                     if not self.playing:
@@ -195,6 +211,8 @@ class TeachingTest(Helper):
                 elif key == "f":  # free move
                     self.mc.release_all_servos()
                     self.echo("Released")
+                elif key == "h":
+                    self.home() 
                 else:
                     print(key)
                     continue
