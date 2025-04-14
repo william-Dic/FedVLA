@@ -7,6 +7,9 @@ import threading
 import json
 import serial
 import serial.tools.list_ports
+import numpy as np
+import cv2  # For saving the images as PNG files
+import pyrealsense2 as rs  # For RealSense
 
 from pymycobot.mycobot import MyCobot
 
@@ -67,7 +70,7 @@ class Helper(object):
         self.w, self.h = os.get_terminal_size()
 
     def echo(self, msg):
-        print("\r{}".format(" " * self.w), end="")
+        print("\r{}".format(" " * self.w), end="")  # Clean the screen
         print("\r{}".format(msg), end="")
 
 
@@ -81,17 +84,25 @@ class TeachingTest(Helper):
         self.record_gripper_list = []
         self.record_t = None
         self.play_t = None
+        self.save_path = "stack_orange"  # The folder where the dataset will be stored
+        self.episode_count = 1  # Track episodes
+        
+        # Initialize RealSense pipeline
+        self.pipeline = rs.pipeline()
+        self.config = rs.config()
+        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+        self.pipeline.start(self.config)
 
     def home(self):
-        self.mc.set_encoders([122,2053,1929,1900,928,2470], 80)
-        self.mc.set_gripper_value(90,80)
-        
-        
+        self.mc.set_encoders([122, 2053, 1929, 1900, 928, 2470], 80)
+        self.mc.set_gripper_value(90, 80)
+
     def record(self):
         self.record_list = []
         self.record_gripper_list = []
         self.recording = True
         self.mc.set_fresh_mode(0)
+
         def _record():
             start_t = time.time()
             while self.recording:
@@ -103,7 +114,6 @@ class TeachingTest(Helper):
                     time.sleep(0.1)
                     print("\r angles{}".format(angles), end="\n")
                     print("\r gripper_value{}".format(gripper_value), end="\n")
-                    
 
         self.echo("Start recording.")
         self.record_t = threading.Thread(target=_record, daemon=True)
@@ -117,13 +127,50 @@ class TeachingTest(Helper):
 
     def play(self):
         self.echo("Start play")
-        for angles,gripper_value in zip(self.record_list,self.record_gripper_list):
-            # print(angles)
+        
+        # Ask if the trajectory should be saved
+        save_trajectory = input("Do you want to save this trajectory? (y/n): ").strip().lower()
+        if save_trajectory == "y":
+            episode_folder = os.path.join(self.save_path, f"episode{self.episode_count}")
+            os.makedirs(episode_folder, exist_ok=True)
+            frame_dir = os.path.join(episode_folder, "frame_dir")
+            os.makedirs(frame_dir, exist_ok=True)
+            state_file = os.path.join(episode_folder, "state.json")
+            state_data = []
+
+            # Capture and save frames with RealSense
+            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
+                # Wait for frames
+                frames = self.pipeline.wait_for_frames()
+                color_frame = frames.get_color_frame()
+
+                if not color_frame:
+                    continue
+
+                # Convert color frame to numpy array
+                color_image = np.asanyarray(color_frame.get_data())
+
+                # Save each frame as an image
+                img_filename = os.path.join(frame_dir, f"image{i+1}.png")
+                cv2.imwrite(img_filename, color_image)
+
+                # Save the state (angles and gripper values)
+                state_data.append({
+                    "angles": angles,
+                    "gripper_value": gripper_value
+                })
+
+            # Save state to JSON file
+            with open(state_file, 'w') as f:
+                json.dump(state_data, f, indent=2)
+
+            self.echo(f"Saved trajectory to {episode_folder}")
+
+        for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
             self.mc.set_encoders(angles, 80)
-            print(f"gripper value during play: {gripper_value[0]}")
-            if gripper_value[0] == None:
+            if gripper_value[0] is None:
                 gripper_value[0] = 50
-            self.mc.set_gripper_value(gripper_value[0] - 20,80)
+            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
             time.sleep(0.1)
         self.echo("Finish play")
 
@@ -153,13 +200,12 @@ class TeachingTest(Helper):
         if not self.record_list:
             self.echo("No data should save.")
             return
-	
+
         with open(os.path.dirname(__file__) + "/record.txt", "a") as f:
             json.dump(self.record_list, f, indent=2)
-            self.echo("save dir:  {}".format(os.path.dirname(__file__)))
+            self.echo(f"Saved to: {os.path.dirname(__file__)}")
 
     def load_from_local(self):
-
         with open(os.path.dirname(__file__) + "/record.txt", "r") as f:
             try:
                 data = json.load(f)
@@ -192,29 +238,28 @@ class TeachingTest(Helper):
                 key = sys.stdin.read(1)
                 if key == "q":
                     break
-                elif key == "r":  # recorder
+                elif key == "r":  # Start recording
                     self.record()
-                elif key == "c":  # stop recorder
+                elif key == "c":  # Stop recording
                     self.stop_record()
-                elif key == "p":  # play
+                elif key == "p":  # Play and possibly save the trajectory
                     self.home()
                     self.play()
-                elif key == "P":  # loop play
+                elif key == "P":  # Loop play
                     if not self.playing:
                         self.loop_play()
                     else:
                         self.stop_loop_play()
-                elif key == "s":  # save to local
+                elif key == "s":  # Save to local
                     self.save_to_local()
-                elif key == "l":  # load from local
+                elif key == "l":  # Load from local
                     self.load_from_local()
-                elif key == "f":  # free move
+                elif key == "f":  # Release all servos
                     self.mc.release_all_servos()
                     self.echo("Released")
-                elif key == "h":
-                    self.home() 
+                elif key == "h":  # Home position
+                    self.home()
                 else:
-                    print(key)
                     continue
 
 
