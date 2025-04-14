@@ -126,60 +126,60 @@ class TeachingTest(Helper):
             self.echo("Stop record")
 
     def play(self):
-    self.echo("Start play")
+        self.echo("Start play")
+        
+        # Ask if the trajectory should be saved with default "n" if empty input
+        save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
+        if not save_trajectory:
+            save_trajectory = "n"
+        
+        if save_trajectory == "y":
+            # Count existing episode folders in the save_path directory
+            existing_episodes = [f for f in os.listdir(self.save_path) if os.path.isdir(os.path.join(self.save_path, f))]
+            self.episode_count = len(existing_episodes) + 1  # New episode number
+            
+            # Create the new episode folder and subfolders
+            episode_folder = os.path.join(self.save_path, f"episode{self.episode_count}")
+            os.makedirs(episode_folder, exist_ok=True)
+            frame_dir = os.path.join(episode_folder, "frame_dir")
+            os.makedirs(frame_dir, exist_ok=True)
+            state_file = os.path.join(episode_folder, "state.json")
+            state_data = []
+            
+            # Capture and save frames from RealSense and record the corresponding state
+            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
+                # Wait for frames
+                frames = self.pipeline.wait_for_frames()
+                color_frame = frames.get_color_frame()
+                if not color_frame:
+                    continue
     
-    # Ask if the trajectory should be saved with default "n" if empty input
-    save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
-    if not save_trajectory:
-        save_trajectory = "n"
+                # Convert color frame to numpy array
+                color_image = np.asanyarray(color_frame.get_data())
     
-    if save_trajectory == "y":
-        # Count existing episode folders in the save_path directory
-        existing_episodes = [f for f in os.listdir(self.save_path) if os.path.isdir(os.path.join(self.save_path, f))]
-        self.episode_count = len(existing_episodes) + 1  # New episode number
-        
-        # Create the new episode folder and subfolders
-        episode_folder = os.path.join(self.save_path, f"episode{self.episode_count}")
-        os.makedirs(episode_folder, exist_ok=True)
-        frame_dir = os.path.join(episode_folder, "frame_dir")
-        os.makedirs(frame_dir, exist_ok=True)
-        state_file = os.path.join(episode_folder, "state.json")
-        state_data = []
-        
-        # Capture and save frames from RealSense and record the corresponding state
-        for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
-            # Wait for frames
-            frames = self.pipeline.wait_for_frames()
-            color_frame = frames.get_color_frame()
-            if not color_frame:
-                continue
-
-            # Convert color frame to numpy array
-            color_image = np.asanyarray(color_frame.get_data())
-
-            # Save each frame as an image
-            img_filename = os.path.join(frame_dir, f"image{i+1}.png")
-            cv2.imwrite(img_filename, color_image)
-
-            # Save state information (angles and gripper value)
-            state_data.append({
-                "angles": angles,
-                "gripper_value": gripper_value
-            })
-        
-        # Write the state data to a JSON file
-        with open(state_file, 'w') as f:
-            json.dump(state_data, f, indent=2)
-        self.echo(f"Saved trajectory to {episode_folder}")
-
-    # Play the recorded trajectory
-    for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
-        self.mc.set_encoders(angles, 80)
-        if gripper_value[0] is None:
-            gripper_value[0] = 50
-        self.mc.set_gripper_value(gripper_value[0] - 20, 80)
-        time.sleep(0.1)
-    self.echo("Finish play")
+                # Save each frame as an image
+                img_filename = os.path.join(frame_dir, f"image{i+1}.png")
+                cv2.imwrite(img_filename, color_image)
+    
+                # Save state information (angles and gripper value)
+                state_data.append({
+                    "angles": angles,
+                    "gripper_value": gripper_value
+                })
+            
+            # Write the state data to a JSON file
+            with open(state_file, 'w') as f:
+                json.dump(state_data, f, indent=2)
+            self.echo(f"Saved trajectory to {episode_folder}")
+    
+        # Play the recorded trajectory
+        for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
+            self.mc.set_encoders(angles, 80)
+            if gripper_value[0] is None:
+                gripper_value[0] = 50
+            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+            time.sleep(0.1)
+        self.echo("Finish play")
 
 
     def loop_play(self):
