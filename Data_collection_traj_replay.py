@@ -145,41 +145,49 @@ class TeachingTest(Helper):
             os.makedirs(frame_dir, exist_ok=True)
             state_file = os.path.join(episode_folder, "state.json")
             state_data = []
-            
-            # Capture and save frames from RealSense and record the corresponding state
+    
+            # Capture and save frames with RealSense
             for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
                 # Wait for frames
                 frames = self.pipeline.wait_for_frames()
                 color_frame = frames.get_color_frame()
+    
                 if not color_frame:
                     continue
     
                 # Convert color frame to numpy array
                 color_image = np.asanyarray(color_frame.get_data())
     
+                # Display the captured frame
+                cv2.imshow('RealSense Camera Feed', color_image)
+                cv2.waitKey(1)  # Update the image window and listen for key press (frame update)
+
                 # Save each frame as an image
                 img_filename = os.path.join(frame_dir, f"image{i+1}.png")
                 cv2.imwrite(img_filename, color_image)
     
-                # Save state information (angles and gripper value)
+                # Save the state (angles and gripper values)
                 state_data.append({
                     "angles": angles,
                     "gripper_value": gripper_value
                 })
-            
-            # Write the state data to a JSON file
+    
+            # Save state to JSON file
             with open(state_file, 'w') as f:
                 json.dump(state_data, f, indent=2)
-            self.echo(f"Saved trajectory to {episode_folder}")
     
-        # Play the recorded trajectory
+            self.echo(f"Saved trajectory to {episode_folder}")
+
+        # Continue the play process (move the robot based on the recorded trajectory)
         for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
             self.mc.set_encoders(angles, 80)
             if gripper_value[0] is None:
                 gripper_value[0] = 50
             self.mc.set_gripper_value(gripper_value[0] - 20, 80)
             time.sleep(0.1)
+        
         self.echo("Finish play")
+
 
 
     def loop_play(self):
