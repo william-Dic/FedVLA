@@ -15,3 +15,70 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+
+import cv2
+import numpy as np
+
+# Open three cameras
+cap0 = cv2.VideoCapture(0)  # First camera
+cap1 = cv2.VideoCapture(1)  # Second camera
+cap2 = cv2.VideoCapture(2)  # Third camera
+
+# Check if cameras opened successfully
+if not (cap0.isOpened() and cap1.isOpened() and cap2.isOpened()):
+    print("Error: Could not open all cameras. Please check your camera connections.")
+    # Try to open whatever cameras are available
+    available_cameras = []
+    for i, cap in enumerate([cap0, cap1, cap2]):
+        if cap.isOpened():
+            available_cameras.append((i, cap))
+        else:
+            print(f"Camera {i} could not be opened.")
+    
+    if not available_cameras:
+        print("No cameras available. Exiting.")
+        exit()
+
+while True:
+    frames = []
+    # Read frames from each camera
+    for i, cap in enumerate([cap0, cap1, cap2]):
+        ret, frame = cap.read()
+        if ret:
+            # Add text label to identify each camera
+            cv2.putText(frame, f"Camera {i}", (10, 30), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            frames.append(frame)
+        else:
+            # Create a black frame with text if camera fails
+            black_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(black_frame, f"Camera {i} not available", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            frames.append(black_frame)
+    
+    # Resize frames to the same dimensions if needed
+    heights = [frame.shape[0] for frame in frames]
+    widths = [frame.shape[1] for frame in frames]
+    
+    # Use minimum height and width for consistent display
+    min_height = min(heights)
+    min_width = min(widths)
+    
+    frames_resized = [cv2.resize(frame, (min_width, min_height)) for frame in frames]
+    
+    # Concatenate frames horizontally
+    combined_frame = np.hstack(frames_resized)
+    
+    # Display the combined frame
+    cv2.imshow('Multiple Cameras', combined_frame)
+    
+    # Break the loop if 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release all cameras and close windows
+cap0.release()
+cap1.release()
+cap2.release()
+cv2.destroyAllWindows()
