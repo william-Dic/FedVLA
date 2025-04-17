@@ -83,10 +83,8 @@ class TeachingTest(Helper):
         self.play_t = None
 
     def home(self):
-        print("First")
-        self.mc.set_encoders([2048,2048,2048,2048,2048,2048], 80)
-        time.sleep(5)
-        print("Second")
+        print("")
+        print("Homing")
         self.mc.send_angles([0,0,0,0,0,0], 80)
         self.mc.set_gripper_value(90,80)
         
@@ -99,7 +97,7 @@ class TeachingTest(Helper):
         def _record():
             start_t = time.time()
             while self.recording:
-                angles = self.mc.get_encoders()
+                angles = self.mc.get_angles()
                 gripper_value = self.mc.get_gripper_value()
                 if angles:
                     self.record_list.append(angles)
@@ -123,7 +121,7 @@ class TeachingTest(Helper):
         self.echo("Start play")
         for angles,gripper_value in zip(self.record_list,self.record_gripper_list):
             print(angles)
-            self.mc.set_encoders(angles, 80)
+            self.mc.send_angles(angles, 80)
             print(f"gripper value during play: {gripper_value[0]}")
             if gripper_value[0] == None:
                 gripper_value[0] = 50
@@ -140,7 +138,7 @@ class TeachingTest(Helper):
             while self.playing:
                 idx_ = i % len_
                 i += 1
-                self.mc.set_encoders(self.record_list[idx_], 80)
+                self.mc.send_angles(self.record_list[idx_], 80)
                 time.sleep(0.1)
 
         self.echo("Start loop play.")
