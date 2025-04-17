@@ -3,128 +3,108 @@ import numpy as np
 import cv2
 import time
 
-# Create a context object to manage devices
-ctx = rs.context()
-devices = ctx.query_devices()
-
-# Check if any devices are connected
-if devices.size() == 0:
-    print("No RealSense devices detected! Please check your connection.")
-    exit(1)
-else:
-    print(f"Found {devices.size()} RealSense device(s)")
-    for i in range(devices.size()):
-        device = devices[i]
-        print(f"    Device {i}: {device.get_info(rs.camera_info.name)}")
-        print(f"    Serial number: {device.get_info(rs.camera_info.serial_number)}")
-
-# Create a pipeline and config
-pipeline = rs.pipeline()
-config = rs.config()
-
-# Try to find a device that supports color streaming
-found_rgb = False
-for i in range(devices.size()):
-    device = devices[i]
-    # Get device product line (D400, SR300, etc.)
-    product_line = device.get_info(rs.camera_info.product_line)
+try:
+    # 1. Check for available devices first
+    ctx = rs.context()
+    devices = ctx.query_devices()
+    
+    if devices.size() == 0:
+        print("No RealSense devices detected!")
+        exit(1)
+    else:
+        print(f"Found {devices.size()} RealSense device(s)")
+        for i in range(devices.size()):
+            device = devices[i]
+            print(f"Device {i}: {device.get_info(rs.camera_info.name)}")
+            print(f"Serial: {device.get_info(rs.camera_info.serial_number)}")
+            print(f"Firmware: {device.get_info(rs.camera_info.firmware_version)}")
+    
+    # 2. Create a simpler configuration with lower resolution
+    pipeline = rs.pipeline()
+    config = rs.config()
+    
+    # Try a lower resolution and framerate to reduce bandwidth requirements
+    print("Configuring for 320x240 @ 15fps...")
+    config.enable_stream(rs.stream.color, 320, 240, rs.format.bgr8, 15)
+    
+    # 3. Add advanced options to improve stability
+    device = devices[0]  # Use the first device
     serial = device.get_info(rs.camera_info.serial_number)
-    
-    # Enable color stream for this specific device
     config.enable_device(serial)
+    
+    # 4. Start the pipeline with explicit error checking
+    print(f"Starting pipeline for device {serial}...")
     try:
-        # Enable RGB streaming - try different formats if one doesn't work
-        config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-        found_rgb = True
-        print(f"Enabled color stream on device {serial}")
-        break
+        profile = pipeline.start(config)
+        print("Pipeline started successfully")
+        
+        # Get the actual device being used
+        selected_device = profile.get_device()
+        print(f"Using device: {selected_device.get_info(rs.camera_info.name)}")
+        
+        # 5. Set device advanced options
+        sensors = selected_device.query_sensors()
+        for sensor in sensors:
+            print(f"Found sensor: {sensor.get_info(rs.camera_info.name)}")
+            if sensor.supports(rs.option.enable_auto_exposure):
+                print("Setting auto exposure")
+                sensor.set_option(rs.option.enable_auto_exposure, 1)
+    
     except Exception as e:
-        print(f"Could not enable standard color stream: {e}")
-        try:
-            # Try different resolution
-            config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
-            found_rgb = True
-            print(f"Enabled 720p color stream on device {serial}")
-            break
-        except Exception as e2:
-            print(f"Could not enable 720p color stream: {e2}")
-            continue
-
-if not found_rgb:
-    print("Could not find a device that supports color streaming!")
-    exit(1)
-
-# Start streaming with a timeout
-print("Attempting to start pipeline...")
-try:
-    pipeline_profile = pipeline.start(config)
-    print("Pipeline started successfully")
+        print(f"Failed to start pipeline: {e}")
+        exit(1)
     
-    # Get the selected device
-    selected_device = pipeline_profile.get_device()
-    print(f"Using device: {selected_device.get_info(rs.camera_info.name)}")
-    
-    # Print active streams
-    active_streams = []
-    for stream in pipeline_profile.get_streams():
-        stream_type = stream.stream_type()
-        if stream_type == rs.stream.color:
-            active_streams.append("Color")
-        elif stream_type == rs.stream.depth:
-            active_streams.append("Depth")
-        elif stream_type == rs.stream.infrared:
-            active_streams.append("Infrared")
-    print(f"Active streams: {', '.join(active_streams)}")
-except Exception as e:
-    print(f"Failed to start pipeline: {e}")
-    exit(1)
-
-# Main loop
-try:
+    # 6. Main loop with more frequent frame checking
+    print("Entering main loop...")
     frame_count = 0
     start_time = time.time()
     
     while True:
-        # Wait for the next set of frames with timeout
         try:
-            frames = pipeline.wait_for_frames(5000)  # 5 second timeout
+            # Use a shorter timeout to be more responsive
+            frames = pipeline.wait_for_frames(1000)  # 1 second timeout
             color_frame = frames.get_color_frame()
             
             if not color_frame:
-                print("Received empty color frame")
+                print("No color frame received")
                 continue
-                
-            # Convert color frame to a numpy array and display it
+            
+            # Process frame
             color_image = np.asanyarray(color_frame.get_data())
             
-            # Check if array is valid
-            if color_image.size == 0:
-                print("Empty color image data")
-                continue
-                
-            # Calculate FPS
+            # Display with minimal processing
+            cv2.imshow("RealSense", color_image)
+            
+            # Count frames for FPS calculation
             frame_count += 1
-            elapsed_time = time.time() - start_time
-            if elapsed_time >= 5.0:  # Update FPS every 5 seconds
-                fps = frame_count / elapsed_time
-                print(f"FPS: {fps:.2f}")
+            elapsed = time.time() - start_time
+            if elapsed >= 2.0:
+                fps = frame_count / elapsed
+                print(f"FPS: {fps:.1f}")
                 frame_count = 0
                 start_time = time.time()
-                
-            # Display the image
-            cv2.imshow("RealSense Camera", color_image)
             
-            # Exit the loop when 'q' is pressed
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            # Check for quit
+            key = cv2.waitKey(1)
+            if key & 0xFF == ord('q'):
+                print("User requested exit")
                 break
                 
         except Exception as e:
-            print(f"Error during frame capture: {e}")
-            time.sleep(1)  # Wait a bit before trying again
-            
+            print(f"Error in main loop: {e}")
+            # Wait a bit before retrying
+            time.sleep(0.1)
+    
+except Exception as e:
+    print(f"Unhandled exception: {e}")
+
 finally:
-    # Stop streaming and release resources
-    print("Stopping pipeline...")
-    pipeline.stop()
+    # Clean up
+    try:
+        pipeline.stop()
+        print("Pipeline stopped")
+    except:
+        pass
+    
     cv2.destroyAllWindows()
-    print("Resources released.")
+    print("Resources released")
