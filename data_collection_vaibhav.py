@@ -83,7 +83,7 @@ class TeachingTest(Helper):
         self.record_gripper_list = []
         self.record_t = None
         self.play_t = None
-        self.save_path = "stack_orange"  # The folder where the dataset will be stored
+        self.save_path = "/home/er/Desktop/FedVLA/stack_orange"  # The folder where the dataset will be stored
         self.episode_count = 1  # Track episodes
         
         # Initialize OpenCV camera
@@ -92,7 +92,7 @@ class TeachingTest(Helper):
     def home(self):
         # Convert encoder values [122, 2053, 1929, 1900, 928, 2470] to equivalent angles
         # Using the reference material's encoder-to-angle mapping concept
-        self.mc.send_angles([-165, 0, -10, -12, -95, 36], 80)
+        self.mc.send_angles([0,0,0,0,0,0], 80)
         self.mc.set_gripper_value(90, 80)
 
     def record(self):
@@ -123,73 +123,77 @@ class TeachingTest(Helper):
             self.record_t.join()
             self.echo("Stop record")
 
-    
     def play(self):
-    self.echo("Start play")
-    
-    # Ask if the trajectory should be saved with default "n" if empty input
-    save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
-    if not save_trajectory:
-        save_trajectory = "n"
-    
-    if save_trajectory == "y":
-        # Count existing episode folders in the save_path directory
-        existing_episodes = [f for f in os.listdir(self.save_path) if os.path.isdir(os.path.join(self.save_path, f))]
-        self.episode_count = len(existing_episodes) + 1  # New episode number
+        self.echo("Start play")
         
-        # Create the new episode folder and subfolders
-        episode_folder = os.path.join(self.save_path, f"episode{self.episode_count}")
-        os.makedirs(episode_folder, exist_ok=True)
-        frame_dir = os.path.join(episode_folder, "frame_dir")
-        os.makedirs(frame_dir, exist_ok=True)
-        state_file = os.path.join(episode_folder, "state.json")
-        state_data = []
-
-        # Continuously capture and save frames with OpenCV while executing movements
-        for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
-            # Move the robot
-            self.mc.send_angles(angles, 80)
-            if gripper_value[0] is None:
-                gripper_value[0] = 50
-            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
-            
-            # Capture frame from camera
-            ret, frame = self.cap.read()
-            
-            if ret:
-                # Display the captured frame
-                cv2.imshow('Camera Feed', frame)
-                cv2.waitKey(1)  # Update the image window and listen for key press
-                
-                # Save the frame as an image
-                img_filename = os.path.join(frame_dir, f"image{i+1}.png")
-                cv2.imwrite(img_filename, frame)
-                
-                # Save the state (angles and gripper values)
-                state_data.append({
-                    "angles": angles,
-                    "gripper_value": gripper_value,
-                    "image": f"frame_dir/image{i+1}.png"  # Store relative path to the image
-                })
-            
+        self.echo("Warming up the camera....")
+        
+        for _ in range(6):
+            ret, _ = self.cap.read()
             time.sleep(0.1)
         
-        # Save state to JSON file
-        with open(state_file, 'w') as f:
-            json.dump(state_data, f, indent=2)
+        # Ask if the trajectory should be saved with default "n" if empty input
+        save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
+        if not save_trajectory:
+            save_trajectory = "n"
         
-        self.echo(f"Saved trajectory to {episode_folder}")
-    else:
-        # Just play without saving if user chose not to save
-        for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
-            self.mc.send_angles(angles, 80)
-            if gripper_value[0] is None:
-                gripper_value[0] = 50
-            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
-            time.sleep(0.1)
-    
-    self.echo("Finish play")
+        if save_trajectory == "y":
+            # Count existing episode folders in the save_path directory
+            existing_episodes = [f for f in os.listdir(self.save_path) if os.path.isdir(os.path.join(self.save_path, f))]
+            self.episode_count = len(existing_episodes) + 1  # New episode number
+            
+            # Create the new episode folder and subfolders
+            episode_folder = os.path.join(self.save_path, f"episode{self.episode_count}")
+            os.makedirs(episode_folder, exist_ok=True)
+            frame_dir = os.path.join(episode_folder, "frame_dir")
+            os.makedirs(frame_dir, exist_ok=True)
+            state_file = os.path.join(episode_folder, "state.json")
+            state_data = []
 
+            # Continuously capture and save frames with OpenCV while executing movements
+            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
+                # Move the robot
+                self.mc.send_angles(angles, 80)
+                if gripper_value[0] is None:
+                    gripper_value[0] = 50
+                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+                
+                # Capture frame from camera
+                ret, frame = self.cap.read()
+                
+                if ret:
+                    # Display the captured frame
+                    cv2.imshow('Camera Feed', frame)
+                    cv2.waitKey(1)  # Update the image window and listen for key press
+                    
+                    # Save the frame as an image
+                    img_filename = os.path.join(frame_dir, f"image{i+1}.png")
+                    cv2.imwrite(img_filename, frame)
+                    
+                    # Save the state (angles and gripper values)
+                    state_data.append({
+                        "angles": angles,
+                        "gripper_value": gripper_value,
+                        "image": f"frame_dir/image{i+1}.png"  # Store relative path to the image
+                    })
+                
+                time.sleep(0.1)
+            
+            # Save state to JSON file
+            with open(state_file, 'w') as f:
+                json.dump(state_data, f, indent=2)
+            
+            self.echo(f"Saved trajectory to {episode_folder}")
+        else:
+            # Just play without saving if user chose not to save
+            for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
+                self.mc.send_angles(angles, 80)
+                if gripper_value[0] is None:
+                    gripper_value[0] = 50
+                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+                time.sleep(0.1)
+        
+        self.echo("Finish play")
     def loop_play(self):
         self.playing = True
 
