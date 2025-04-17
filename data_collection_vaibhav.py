@@ -8,8 +8,7 @@ import json
 import serial
 import serial.tools.list_ports
 import numpy as np
-import cv2  # For saving the images as PNG files
-import pyrealsense2 as rs  # For RealSense
+import cv2  # For camera capture and saving images as PNG files
 
 from pymycobot.mycobot import MyCobot
 
@@ -87,11 +86,8 @@ class TeachingTest(Helper):
         self.save_path = "stack_orange"  # The folder where the dataset will be stored
         self.episode_count = 1  # Track episodes
         
-        # Initialize RealSense pipeline
-        self.pipeline = rs.pipeline()
-        self.config = rs.config()
-        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-        self.pipeline.start(self.config)
+        # Initialize OpenCV camera
+        self.cap = cv2.VideoCapture(0)  # 0 is usually the first camera
 
     def home(self):
         # Convert encoder values [122, 2053, 1929, 1900, 928, 2470] to equivalent angles
@@ -148,25 +144,21 @@ class TeachingTest(Helper):
             state_file = os.path.join(episode_folder, "state.json")
             state_data = []
     
-            # Capture and save frames with RealSense
+            # Capture and save frames with OpenCV
             for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
-                # Wait for frames
-                frames = self.pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
-    
-                if not color_frame:
+                # Capture frame from camera
+                ret, frame = self.cap.read()
+                
+                if not ret:
                     continue
-    
-                # Convert color frame to numpy array
-                color_image = np.asanyarray(color_frame.get_data())
-    
+                
                 # Display the captured frame
-                cv2.imshow('RealSense Camera Feed', color_image)
+                cv2.imshow('Camera Feed', frame)
                 cv2.waitKey(1)  # Update the image window and listen for key press (frame update)
 
                 # Save each frame as an image
                 img_filename = os.path.join(frame_dir, f"image{i+1}.png")
-                cv2.imwrite(img_filename, color_image)
+                cv2.imwrite(img_filename, frame)
     
                 # Save the state (angles and gripper values)
                 state_data.append({
@@ -189,8 +181,6 @@ class TeachingTest(Helper):
             time.sleep(0.1)
         
         self.echo("Finish play")
-
-
 
     def loop_play(self):
         self.playing = True
@@ -231,6 +221,11 @@ class TeachingTest(Helper):
                 self.echo("Load data success.")
             except Exception:
                 self.echo("Error: invalid data.")
+                
+    def cleanup(self):
+        # Release the camera when done
+        self.cap.release()
+        cv2.destroyAllWindows()
 
     def print_menu(self):
         print(
@@ -251,34 +246,38 @@ class TeachingTest(Helper):
     def start(self):
         self.print_menu()
 
-        while not False:
-            with Raw(sys.stdin):
-                key = sys.stdin.read(1)
-                if key == "q":
-                    break
-                elif key == "r":  # Start recording
-                    self.record()
-                elif key == "c":  # Stop recording
-                    self.stop_record()
-                elif key == "p":  # Play and possibly save the trajectory
-                    self.home()
-                    self.play()
-                elif key == "P":  # Loop play
-                    if not self.playing:
-                        self.loop_play()
+        try:
+            while not False:
+                with Raw(sys.stdin):
+                    key = sys.stdin.read(1)
+                    if key == "q":
+                        break
+                    elif key == "r":  # Start recording
+                        self.record()
+                    elif key == "c":  # Stop recording
+                        self.stop_record()
+                    elif key == "p":  # Play and possibly save the trajectory
+                        self.home()
+                        self.play()
+                    elif key == "P":  # Loop play
+                        if not self.playing:
+                            self.loop_play()
+                        else:
+                            self.stop_loop_play()
+                    elif key == "s":  # Save to local
+                        self.save_to_local()
+                    elif key == "l":  # Load from local
+                        self.load_from_local()
+                    elif key == "f":  # Release all servos
+                        self.mc.release_all_servos()
+                        self.echo("Released")
+                    elif key == "h":  # Home position
+                        self.home()
                     else:
-                        self.stop_loop_play()
-                elif key == "s":  # Save to local
-                    self.save_to_local()
-                elif key == "l":  # Load from local
-                    self.load_from_local()
-                elif key == "f":  # Release all servos
-                    self.mc.release_all_servos()
-                    self.echo("Released")
-                elif key == "h":  # Home position
-                    self.home()
-                else:
-                    continue
+                        continue
+        finally:
+            # Make sure we clean up properly
+            self.cleanup()
 
 
 if __name__ == "__main__":
