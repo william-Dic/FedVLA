@@ -8,8 +8,7 @@ import json
 import serial
 import serial.tools.list_ports
 import numpy as np
-import cv2  # For saving the images as PNG files
-import pyrealsense2 as rs  # For RealSense
+import cv2  # For camera capture and saving images as PNG files
 
 from pymycobot.mycobot import MyCobot
 
@@ -28,13 +27,14 @@ def setup():
         print("{} : {}".format(idx, port))
         idx += 1
 
-    _in = input("\nPlease input 1 - {} to choice:".format(idx - 1))
+    #_in = input("\nPlease input 1 - {} to choice:".format(idx - 1))
+    _in = 1
     port = str(plist[int(_in) - 1]).split(" - ")[0].strip()
     print(port)
     print("")
 
     baud = 1000000
-    _baud = input("Please input baud(default:115200):")
+    #_baud = input("Please input baud(default:115200):")
     try:
         baud = int(_baud)
     except Exception:
@@ -43,7 +43,7 @@ def setup():
     print("")
 
     DEBUG = False
-    f = input("Wether DEBUG mode[Y/n]:")
+    #f = input("Wether DEBUG mode[Y/n]:")
     if f in ["y", "Y", "yes", "Yes"]:
         DEBUG = True
     # mc = MyCobot(port, debug=True)
@@ -84,17 +84,16 @@ class TeachingTest(Helper):
         self.record_gripper_list = []
         self.record_t = None
         self.play_t = None
-        self.save_path = "stack_orange"  # The folder where the dataset will be stored
+        self.save_path = "/home/er/Desktop/FedVLA/stack_orange"  # The folder where the dataset will be stored
         self.episode_count = 1  # Track episodes
         
-        # Initialize RealSense pipeline
-        self.pipeline = rs.pipeline()
-        self.config = rs.config()
-        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-        self.pipeline.start(self.config)
+        # Initialize OpenCV camera
+        self.cap = cv2.VideoCapture(0)  # 0 is usually the first camera
 
     def home(self):
-        self.mc.set_encoders([122, 2053, 1929, 1900, 928, 2470], 80)
+        # Convert encoder values [122, 2053, 1929, 1900, 928, 2470] to equivalent angles
+        # Using the reference material's encoder-to-angle mapping concept
+        self.mc.send_angles([0,0,0,0,0,0], 80)
         self.mc.set_gripper_value(90, 80)
 
     def record(self):
@@ -106,7 +105,7 @@ class TeachingTest(Helper):
         def _record():
             start_t = time.time()
             while self.recording:
-                angles = self.mc.get_encoders()
+                angles = self.mc.get_angles()
                 gripper_value = self.mc.get_gripper_value()
                 if angles:
                     self.record_list.append(angles)
@@ -128,6 +127,12 @@ class TeachingTest(Helper):
     def play(self):
         self.echo("Start play")
         
+        self.echo("Warming up the camera....")
+        
+        for _ in range(6):
+            ret, _ = self.cap.read()
+            time.sleep(0.1)
+        
         # Ask if the trajectory should be saved with default "n" if empty input
         save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
         if not save_trajectory:
@@ -145,51 +150,51 @@ class TeachingTest(Helper):
             os.makedirs(frame_dir, exist_ok=True)
             state_file = os.path.join(episode_folder, "state.json")
             state_data = []
-    
-            # Capture and save frames with RealSense
-            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
-                # Wait for frames
-                frames = self.pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
-    
-                if not color_frame:
-                    continue
-    
-                # Convert color frame to numpy array
-                color_image = np.asanyarray(color_frame.get_data())
-    
-                # Display the captured frame
-                cv2.imshow('RealSense Camera Feed', color_image)
-                cv2.waitKey(1)  # Update the image window and listen for key press (frame update)
 
-                # Save each frame as an image
-                img_filename = os.path.join(frame_dir, f"image{i+1}.png")
-                cv2.imwrite(img_filename, color_image)
-    
-                # Save the state (angles and gripper values)
-                state_data.append({
-                    "angles": angles,
-                    "gripper_value": gripper_value
-                })
-    
+            # Continuously capture and save frames with OpenCV while executing movements
+            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
+                # Move the robot
+                self.mc.send_angles(angles, 80)
+                if gripper_value[0] is None:
+                    gripper_value[0] = 50
+                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+                
+                # Capture frame from camera
+                ret, frame = self.cap.read()
+                
+                if ret:
+                    # Display the captured frame
+                    cv2.imshow('Camera Feed', frame)
+                    cv2.waitKey(1)  # Update the image window and listen for key press
+                    
+                    # Save the frame as an image
+                    img_filename = os.path.join(frame_dir, f"image{i+1}.png")
+                    cv2.imwrite(img_filename, frame)
+                    
+                    # Save the state (angles and gripper values)
+                    state_data.append({
+                        "angles": angles,
+                        "gripper_value": gripper_value,
+                        "image": f"frame_dir/image{i+1}.png"  # Store relative path to the image
+                    })
+                
+                time.sleep(0.1)
+            
             # Save state to JSON file
             with open(state_file, 'w') as f:
                 json.dump(state_data, f, indent=2)
-    
+            
             self.echo(f"Saved trajectory to {episode_folder}")
-
-        # Continue the play process (move the robot based on the recorded trajectory)
-        for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
-            self.mc.set_encoders(angles, 80)
-            if gripper_value[0] is None:
-                gripper_value[0] = 50
-            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
-            time.sleep(0.1)
+        else:
+            # Just play without saving if user chose not to save
+            for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
+                self.mc.send_angles(angles, 80)
+                if gripper_value[0] is None:
+                    gripper_value[0] = 50
+                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+                time.sleep(0.1)
         
         self.echo("Finish play")
-
-
-
     def loop_play(self):
         self.playing = True
 
@@ -199,7 +204,7 @@ class TeachingTest(Helper):
             while self.playing:
                 idx_ = i % len_
                 i += 1
-                self.mc.set_encoders(self.record_list[idx_], 80)
+                self.mc.send_angles(self.record_list[idx_], 80)
                 time.sleep(0.1)
 
         self.echo("Start loop play.")
@@ -229,6 +234,11 @@ class TeachingTest(Helper):
                 self.echo("Load data success.")
             except Exception:
                 self.echo("Error: invalid data.")
+                
+    def cleanup(self):
+        # Release the camera when done
+        self.cap.release()
+        cv2.destroyAllWindows()
 
     def print_menu(self):
         print(
@@ -249,34 +259,38 @@ class TeachingTest(Helper):
     def start(self):
         self.print_menu()
 
-        while not False:
-            with Raw(sys.stdin):
-                key = sys.stdin.read(1)
-                if key == "q":
-                    break
-                elif key == "r":  # Start recording
-                    self.record()
-                elif key == "c":  # Stop recording
-                    self.stop_record()
-                elif key == "p":  # Play and possibly save the trajectory
-                    self.home()
-                    self.play()
-                elif key == "P":  # Loop play
-                    if not self.playing:
-                        self.loop_play()
+        try:
+            while not False:
+                with Raw(sys.stdin):
+                    key = sys.stdin.read(1)
+                    if key == "q":
+                        break
+                    elif key == "r":  # Start recording
+                        self.record()
+                    elif key == "c":  # Stop recording
+                        self.stop_record()
+                    elif key == "p":  # Play and possibly save the trajectory
+                        self.home()
+                        self.play()
+                    elif key == "P":  # Loop play
+                        if not self.playing:
+                            self.loop_play()
+                        else:
+                            self.stop_loop_play()
+                    elif key == "s":  # Save to local
+                        self.save_to_local()
+                    elif key == "l":  # Load from local
+                        self.load_from_local()
+                    elif key == "f":  # Release all servos
+                        self.mc.release_all_servos()
+                        self.echo("Released")
+                    elif key == "h":  # Home position
+                        self.home()
                     else:
-                        self.stop_loop_play()
-                elif key == "s":  # Save to local
-                    self.save_to_local()
-                elif key == "l":  # Load from local
-                    self.load_from_local()
-                elif key == "f":  # Release all servos
-                    self.mc.release_all_servos()
-                    self.echo("Released")
-                elif key == "h":  # Home position
-                    self.home()
-                else:
-                    continue
+                        continue
+        finally:
+            # Make sure we clean up properly
+            self.cleanup()
 
 
 if __name__ == "__main__":
