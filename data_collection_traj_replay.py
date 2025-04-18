@@ -44,6 +44,7 @@ def setup():
 
     DEBUG = False
     #f = input("Wether DEBUG mode[Y/n]:")
+    f = "n"
     if f in ["y", "Y", "yes", "Yes"]:
         DEBUG = True
     # mc = MyCobot(port, debug=True)
