@@ -195,6 +195,7 @@ class TeachingTest(Helper):
             with open(state_file, 'w') as f:
                 json.dump(state_data, f, indent=2)
             
+            print(f"Saved trajectory to {episode_folder}"))
             self.echo(f"Saved trajectory to {episode_folder}")
         
         self.echo("Finish play")
