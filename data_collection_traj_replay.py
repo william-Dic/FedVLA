@@ -133,7 +133,36 @@ class TeachingTest(Helper):
             ret, _ = self.cap.read()
             time.sleep(0.1)
         
-        # Ask if the trajectory should be saved with default "n" if empty input
+        # Create a temporary list to store captured frames and states
+        temp_frames = []
+        temp_states = []
+        
+        # Play the trajectory while capturing frames and states
+        for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
+            # Move the robot
+            self.mc.send_angles(angles, 80)
+            if gripper_value[0] is None:
+                gripper_value[0] = 50
+            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+            
+            # Capture frame from camera
+            ret, frame = self.cap.read()
+            
+            if ret:
+                # Display the captured frame
+                cv2.imshow('Camera Feed', frame)
+                cv2.waitKey(1)  # Update the image window and listen for key press
+                
+                # Store the frame and state temporarily
+                temp_frames.append(frame)
+                temp_states.append({
+                    "angles": angles,
+                    "gripper_value": gripper_value
+                })
+            
+            time.sleep(0.1)
+        
+        # After playing, ask if the trajectory should be saved
         save_trajectory = input("Do you want to save this trajectory? (y/n) [default n]: ").strip().lower()
         if not save_trajectory:
             save_trajectory = "n"
@@ -150,49 +179,22 @@ class TeachingTest(Helper):
             os.makedirs(frame_dir, exist_ok=True)
             state_file = os.path.join(episode_folder, "state.json")
             state_data = []
-
-            # Continuously capture and save frames with OpenCV while executing movements
-            for i, (angles, gripper_value) in enumerate(zip(self.record_list, self.record_gripper_list)):
-                # Move the robot
-                self.mc.send_angles(angles, 80)
-                if gripper_value[0] is None:
-                    gripper_value[0] = 50
-                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+            
+            # Save the frames and states that were captured
+            for i, (frame, state) in enumerate(zip(temp_frames, temp_states)):
+                # Save the frame as an image
+                img_filename = os.path.join(frame_dir, f"image{i+1}.png")
+                cv2.imwrite(img_filename, frame)
                 
-                # Capture frame from camera
-                ret, frame = self.cap.read()
-                
-                if ret:
-                    # Display the captured frame
-                    cv2.imshow('Camera Feed', frame)
-                    cv2.waitKey(1)  # Update the image window and listen for key press
-                    
-                    # Save the frame as an image
-                    img_filename = os.path.join(frame_dir, f"image{i+1}.png")
-                    cv2.imwrite(img_filename, frame)
-                    
-                    # Save the state (angles and gripper values)
-                    state_data.append({
-                        "angles": angles,
-                        "gripper_value": gripper_value,
-                        "image": f"frame_dir/image{i+1}.png"  # Store relative path to the image
-                    })
-                
-                time.sleep(0.1)
+                # Add image path to state data
+                state["image"] = f"frame_dir/image{i+1}.png"  # Store relative path to the image
+                state_data.append(state)
             
             # Save state to JSON file
             with open(state_file, 'w') as f:
                 json.dump(state_data, f, indent=2)
             
             self.echo(f"Saved trajectory to {episode_folder}")
-        else:
-            # Just play without saving if user chose not to save
-            for angles, gripper_value in zip(self.record_list, self.record_gripper_list):
-                self.mc.send_angles(angles, 80)
-                if gripper_value[0] is None:
-                    gripper_value[0] = 50
-                self.mc.set_gripper_value(gripper_value[0] - 20, 80)
-                time.sleep(0.1)
         
         self.echo("Finish play")
     def loop_play(self):
