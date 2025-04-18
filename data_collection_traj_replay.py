@@ -94,7 +94,7 @@ class TeachingTest(Helper):
     def home(self):
         # Convert encoder values [122, 2053, 1929, 1900, 928, 2470] to equivalent angles
         # Using the reference material's encoder-to-angle mapping concept
-        self.mc.send_angles([0,0,0,0,0,0], 80)
+        self.mc.send_angles([0,0,0,0,0,0], 50)
         self.mc.set_gripper_value(90, 80)
 
     def record(self):
@@ -144,7 +144,9 @@ class TeachingTest(Helper):
             self.mc.send_angles(angles, 80)
             if gripper_value[0] is None:
                 gripper_value[0] = 50
-            self.mc.set_gripper_value(gripper_value[0] - 20, 80)
+            elif gripper_value[0] <= 60:
+                gripper_value[0] -= 10
+            self.mc.set_gripper_value(gripper_value[0], 80)
             
             # Capture frame from camera
             ret, frame = self.cap.read()
