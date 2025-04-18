@@ -1,8 +1,0 @@
-Found 1 RealSense device(s)
-Device 0: Intel RealSense D405
-Serial: 128422271233
-Firmware: 5.12.14.100
-Configuring for 320x240 @ 15fps...
-Starting pipeline for device 128422271233...
-Failed to start pipeline: Couldn't resolve requests
-Resources released
