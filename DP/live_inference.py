@@ -223,7 +223,7 @@ def run_live_inference(args, mc: MyCobot):
                 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                 # START MODIFICATION for CPU Speedup
                 # Define the number of steps for inference (much smaller than original_timesteps)
-                inference_timesteps = 20 # <--- ADJUST THIS VALUE! Try 50, 20, 10, etc.
+                inference_timesteps = 1000 # <--- ADJUST THIS VALUE! Try 50, 20, 10, etc.
                 logging.info(f"CPU inference: Attempting prediction with {inference_timesteps} steps.")
 
                 inference_start_time = time.time() # Start timing sampling
