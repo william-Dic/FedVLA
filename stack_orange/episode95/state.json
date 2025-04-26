@@ -1,0 +1,1542 @@
+[
+  {
+    "angles": [
+      -0.43,
+      0.08,
+      0.43,
+      -0.35,
+      -0.52,
+      1.31
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image1.png"
+  },
+  {
+    "angles": [
+      -0.43,
+      0.26,
+      0.43,
+      -0.87,
+      -0.35,
+      1.31
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image2.png"
+  },
+  {
+    "angles": [
+      -0.43,
+      0.35,
+      0.43,
+      -1.14,
+      -0.43,
+      0.87
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image3.png"
+  },
+  {
+    "angles": [
+      -0.43,
+      0.35,
+      0.43,
+      -1.14,
+      -0.52,
+      -1.84
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image4.png"
+  },
+  {
+    "angles": [
+      -0.35,
+      0.35,
+      0.43,
+      -1.14,
+      -0.17,
+      -7.82
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image5.png"
+  },
+  {
+    "angles": [
+      -0.08,
+      0.26,
+      0.43,
+      -1.4,
+      0.79,
+      -14.5
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image6.png"
+  },
+  {
+    "angles": [
+      -0.08,
+      0.26,
+      0.43,
+      -1.93,
+      1.31,
+      -19.59
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image7.png"
+  },
+  {
+    "angles": [
+      -0.08,
+      0.0,
+      0.43,
+      -2.81,
+      1.75,
+      -25.04
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image8.png"
+  },
+  {
+    "angles": [
+      0.0,
+      -0.35,
+      0.43,
+      -3.6,
+      2.54,
+      -29.97
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image9.png"
+  },
+  {
+    "angles": [
+      0.0,
+      -0.35,
+      0.35,
+      -4.65,
+      3.51,
+      -33.39
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image10.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -0.52,
+      0.35,
+      -7.91,
+      5.09,
+      -38.14
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image11.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -0.52,
+      0.35,
+      -12.74,
+      5.88,
+      -42.45
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image12.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -0.61,
+      0.26,
+      -16.52,
+      5.8,
+      -45.7
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image13.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -2.37,
+      0.26,
+      -20.12,
+      5.62,
+      -45.96
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image14.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -4.65,
+      0.35,
+      -21.88,
+      5.27,
+      -45.7
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image15.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -7.03,
+      0.35,
+      -22.5,
+      4.57,
+      -44.91
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image16.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -10.1,
+      0.35,
+      -23.55,
+      4.3,
+      -45.0
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image17.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -14.32,
+      0.35,
+      -23.99,
+      3.6,
+      -44.82
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image18.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -19.59,
+      0.35,
+      -23.99,
+      3.25,
+      -44.56
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image19.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -24.96,
+      0.35,
+      -23.37,
+      3.07,
+      -44.73
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image20.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -30.93,
+      0.43,
+      -21.0,
+      2.9,
+      -44.56
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image21.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -36.47,
+      0.43,
+      -17.49,
+      3.33,
+      -44.38
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image22.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -40.78,
+      0.52,
+      -15.2,
+      4.13,
+      -44.03
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image23.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -44.73,
+      0.52,
+      -13.27,
+      4.13,
+      -43.76
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image24.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -48.77,
+      0.52,
+      -12.21,
+      4.39,
+      -44.03
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image25.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -52.38,
+      0.61,
+      -10.98,
+      4.83,
+      -44.12
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image26.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -55.37,
+      0.61,
+      -8.34,
+      4.74,
+      -43.5
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image27.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -58.53,
+      0.61,
+      -5.53,
+      4.65,
+      -42.36
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image28.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -61.78,
+      0.61,
+      -2.28,
+      4.65,
+      -41.83
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image29.png"
+  },
+  {
+    "angles": [
+      0.08,
+      -64.77,
+      0.61,
+      0.17,
+      4.65,
+      -41.3
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image30.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -67.85,
+      0.61,
+      1.84,
+      4.57,
+      -41.22
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image31.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -70.92,
+      0.61,
+      3.07,
+      4.57,
+      -41.66
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image32.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -74.35,
+      0.61,
+      4.74,
+      4.83,
+      -41.3
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image33.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -77.95,
+      0.61,
+      7.91,
+      4.83,
+      -40.51
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image34.png"
+  },
+  {
+    "angles": [
+      0.17,
+      -81.47,
+      0.61,
+      11.77,
+      4.83,
+      -39.72
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image35.png"
+  },
+  {
+    "angles": [
+      0.26,
+      -85.07,
+      0.61,
+      15.2,
+      4.74,
+      -39.46
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image36.png"
+  },
+  {
+    "angles": [
+      0.26,
+      -88.06,
+      0.61,
+      17.4,
+      4.83,
+      -39.11
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image37.png"
+  },
+  {
+    "angles": [
+      0.26,
+      -90.52,
+      0.61,
+      18.72,
+      4.92,
+      -38.84
+    ],
+    "gripper_value": [
+      89
+    ],
+    "image": "frame_dir/image38.png"
+  },
+  {
+    "angles": [
+      0.26,
+      -92.37,
+      0.7,
+      20.91,
+      4.74,
+      -38.49
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image39.png"
+  },
+  {
+    "angles": [
+      1.75,
+      -94.21,
+      0.7,
+      23.37,
+      3.95,
+      -38.23
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image40.png"
+  },
+  {
+    "angles": [
+      3.95,
+      -95.18,
+      0.7,
+      24.78,
+      -0.35,
+      -37.44
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image41.png"
+  },
+  {
+    "angles": [
+      5.0,
+      -95.36,
+      0.61,
+      24.96,
+      -2.46,
+      -37.08
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image42.png"
+  },
+  {
+    "angles": [
+      5.0,
+      -96.5,
+      0.61,
+      25.31,
+      -2.46,
+      -37.44
+    ],
+    "gripper_value": [
+      88
+    ],
+    "image": "frame_dir/image43.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -97.47,
+      0.7,
+      25.75,
+      -2.54,
+      -37.52
+    ],
+    "gripper_value": [
+      87
+    ],
+    "image": "frame_dir/image44.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -97.55,
+      0.7,
+      26.27,
+      -2.54,
+      -37.7
+    ],
+    "gripper_value": [
+      87
+    ],
+    "image": "frame_dir/image45.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -97.55,
+      0.7,
+      26.36,
+      -2.28,
+      -37.96
+    ],
+    "gripper_value": [
+      79
+    ],
+    "image": "frame_dir/image46.png"
+  },
+  {
+    "angles": [
+      4.83,
+      -96.59,
+      0.79,
+      26.45,
+      -2.1,
+      -39.02
+    ],
+    "gripper_value": [
+      61
+    ],
+    "image": "frame_dir/image47.png"
+  },
+  {
+    "angles": [
+      4.83,
+      -96.67,
+      0.79,
+      26.71,
+      -2.19,
+      -39.72
+    ],
+    "gripper_value": [
+      9
+    ],
+    "image": "frame_dir/image48.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -96.67,
+      0.79,
+      26.98,
+      -1.93,
+      -40.07
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image49.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -96.67,
+      0.79,
+      27.07,
+      -1.66,
+      -39.9
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image50.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -96.59,
+      0.79,
+      27.07,
+      -0.96,
+      -39.99
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image51.png"
+  },
+  {
+    "angles": [
+      4.92,
+      -96.24,
+      0.96,
+      27.42,
+      -0.7,
+      -39.99
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image52.png"
+  },
+  {
+    "angles": [
+      5.27,
+      -92.28,
+      1.58,
+      27.86,
+      -0.96,
+      -39.99
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image53.png"
+  },
+  {
+    "angles": [
+      5.53,
+      -88.94,
+      2.28,
+      25.13,
+      -0.87,
+      -40.6
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image54.png"
+  },
+  {
+    "angles": [
+      5.62,
+      -84.72,
+      3.51,
+      20.21,
+      -0.52,
+      -40.69
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image55.png"
+  },
+  {
+    "angles": [
+      5.71,
+      -80.33,
+      5.27,
+      15.29,
+      -0.79,
+      -40.69
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image56.png"
+  },
+  {
+    "angles": [
+      5.71,
+      -75.93,
+      7.29,
+      10.54,
+      -0.61,
+      -40.69
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image57.png"
+  },
+  {
+    "angles": [
+      6.06,
+      -71.8,
+      9.05,
+      6.5,
+      -0.52,
+      -40.95
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image58.png"
+  },
+  {
+    "angles": [
+      8.08,
+      -67.76,
+      10.72,
+      2.37,
+      -2.9,
+      -42.18
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image59.png"
+  },
+  {
+    "angles": [
+      9.84,
+      -59.94,
+      13.27,
+      -7.99,
+      -2.1,
+      -44.73
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image60.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -55.37,
+      14.32,
+      -16.34,
+      -1.14,
+      -46.05
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image61.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -51.06,
+      15.02,
+      -22.58,
+      -0.17,
+      -46.23
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image62.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -47.28,
+      15.11,
+      -28.3,
+      0.96,
+      -46.49
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image63.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -44.03,
+      15.11,
+      -34.45,
+      2.72,
+      -46.49
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image64.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -41.57,
+      15.11,
+      -39.46,
+      2.9,
+      -46.49
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image65.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -38.67,
+      15.11,
+      -43.06,
+      2.81,
+      -46.58
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image66.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -36.56,
+      15.11,
+      -45.61,
+      2.98,
+      -46.05
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image67.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -35.33,
+      15.11,
+      -48.95,
+      3.86,
+      -45.79
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image68.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -35.24,
+      15.11,
+      -53.7,
+      4.39,
+      -46.05
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image69.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -36.03,
+      15.02,
+      -56.07,
+      4.13,
+      -45.7
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image70.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -36.65,
+      14.5,
+      -56.86,
+      4.04,
+      -44.82
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image71.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -40.07,
+      14.94,
+      -56.95,
+      5.36,
+      -45.26
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image72.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -43.15,
+      15.02,
+      -56.95,
+      6.24,
+      -45.7
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image73.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -46.58,
+      15.02,
+      -56.95,
+      6.5,
+      -46.23
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image74.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -50.97,
+      15.02,
+      -56.77,
+      6.32,
+      -47.19
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image75.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -55.54,
+      15.02,
+      -56.07,
+      5.71,
+      -47.9
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image76.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -59.85,
+      15.02,
+      -53.61,
+      5.09,
+      -48.16
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image77.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -64.16,
+      15.02,
+      -50.53,
+      4.74,
+      -48.86
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image78.png"
+  },
+  {
+    "angles": [
+      10.01,
+      -68.02,
+      15.02,
+      -47.54,
+      4.74,
+      -49.39
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image79.png"
+  },
+  {
+    "angles": [
+      9.84,
+      -71.71,
+      15.11,
+      -44.2,
+      4.74,
+      -49.83
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image80.png"
+  },
+  {
+    "angles": [
+      9.84,
+      -74.97,
+      15.11,
+      -41.3,
+      5.0,
+      -50.09
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image81.png"
+  },
+  {
+    "angles": [
+      10.1,
+      -77.78,
+      15.11,
+      -38.84,
+      4.92,
+      -50.36
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image82.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -79.98,
+      15.11,
+      -36.47,
+      5.09,
+      -50.36
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image83.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -81.56,
+      15.11,
+      -34.01,
+      5.09,
+      -49.65
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image84.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -82.26,
+      15.11,
+      -32.6,
+      5.18,
+      -49.39
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image85.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -82.79,
+      15.11,
+      -32.16,
+      5.27,
+      -49.3
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image86.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -82.96,
+      15.11,
+      -31.72,
+      5.36,
+      -49.39
+    ],
+    "gripper_value": [
+      8
+    ],
+    "image": "frame_dir/image87.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -82.96,
+      15.11,
+      -31.11,
+      5.88,
+      -49.74
+    ],
+    "gripper_value": [
+      9
+    ],
+    "image": "frame_dir/image88.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -83.05,
+      15.02,
+      -30.93,
+      5.97,
+      -49.48
+    ],
+    "gripper_value": [
+      9
+    ],
+    "image": "frame_dir/image89.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -83.05,
+      14.85,
+      -30.93,
+      5.97,
+      -49.39
+    ],
+    "gripper_value": [
+      66
+    ],
+    "image": "frame_dir/image90.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -83.75,
+      15.02,
+      -30.93,
+      5.97,
+      -50.27
+    ],
+    "gripper_value": [
+      82
+    ],
+    "image": "frame_dir/image91.png"
+  },
+  {
+    "angles": [
+      10.28,
+      -84.55,
+      15.11,
+      -30.93,
+      6.06,
+      -51.41
+    ],
+    "gripper_value": [
+      90
+    ],
+    "image": "frame_dir/image92.png"
+  },
+  {
+    "angles": [
+      10.19,
+      -84.11,
+      15.11,
+      -30.93,
+      6.06,
+      -52.2
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image93.png"
+  },
+  {
+    "angles": [
+      10.1,
+      -83.93,
+      15.11,
+      -30.93,
+      6.06,
+      -52.2
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image94.png"
+  },
+  {
+    "angles": [
+      9.93,
+      -83.84,
+      15.2,
+      -30.93,
+      6.32,
+      -52.2
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image95.png"
+  },
+  {
+    "angles": [
+      9.58,
+      -83.67,
+      15.29,
+      -30.93,
+      6.94,
+      -52.2
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image96.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -81.47,
+      15.9,
+      -30.93,
+      7.03,
+      -51.59
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image97.png"
+  },
+  {
+    "angles": [
+      9.66,
+      -79.1,
+      17.31,
+      -31.02,
+      7.03,
+      -50.27
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image98.png"
+  },
+  {
+    "angles": [
+      9.93,
+      -76.99,
+      19.16,
+      -31.2,
+      7.11,
+      -49.65
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image99.png"
+  },
+  {
+    "angles": [
+      9.93,
+      -73.74,
+      22.23,
+      -33.75,
+      7.2,
+      -49.3
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image100.png"
+  },
+  {
+    "angles": [
+      9.93,
+      -70.4,
+      25.92,
+      -37.0,
+      7.03,
+      -47.19
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image101.png"
+  },
+  {
+    "angles": [
+      9.75,
+      -66.18,
+      30.32,
+      -39.46,
+      7.2,
+      -44.91
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image102.png"
+  },
+  {
+    "angles": [
+      9.4,
+      -61.17,
+      35.41,
+      -42.89,
+      8.34,
+      -42.27
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image103.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -56.77,
+      40.25,
+      -47.02,
+      9.66,
+      -40.16
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image104.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -53.34,
+      44.56,
+      -51.06,
+      11.51,
+      -38.93
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image105.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -50.0,
+      48.69,
+      -54.66,
+      11.6,
+      -38.49
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image106.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -47.19,
+      52.2,
+      -57.91,
+      10.81,
+      -38.93
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image107.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -45.7,
+      55.63,
+      -60.73,
+      10.98,
+      -39.19
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image108.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -44.64,
+      59.15,
+      -62.75,
+      11.77,
+      -38.67
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image109.png"
+  },
+  {
+    "angles": [
+      9.49,
+      -44.12,
+      62.13,
+      -64.77,
+      11.6,
+      -39.28
+    ],
+    "gripper_value": [
+      91
+    ],
+    "image": "frame_dir/image110.png"
+  }
+]
