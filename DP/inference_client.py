@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Inference Client for MyCobot with Diffusion Service")
     parser.add_argument('--host', type=str, default='10.231.112.52', help='Inference server IP')
     parser.add_argument('--port', type=int, default=50007, help='Inference server port')
-    parser.add_argument('--serial_port', type=str, default=None, help='Serial port for MyCobot (e.g., COM3 or /dev/ttyUSB0)')
+    parser.add_argument('--serial_port', type=str, default='/dev/ttyAMA0', help='Serial port for MyCobot (e.g., COM3 or /dev/ttyUSB0)')
     parser.add_argument('--baud', type=int, default=1000000, help='Baud rate for MyCobot')
     parser.add_argument('--interval', type=float, default=0.1, help='Seconds between inference calls')
     args = parser.parse_args()
