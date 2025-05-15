@@ -55,10 +55,20 @@ def main(args):
     mc = MyCobot(serial_port, args.baud, debug=False)
     print(f"Connected to MyCobot on {serial_port} at {args.baud} baud.")
 
+    # Home robot and gripper
+    mc.send_angles([0, 0, 0, 0, 0, 0], 50)
+    mc.set_gripper_value(90, 80)
+    print("Robot and gripper initialized to home position.")
+
     # Initialize camera
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise RuntimeError("Failed to open camera.")
+    # Warm up camera
+    for _ in range(6):
+        ret, _ = cap.read()
+        time.sleep(0.1)
+    print("Camera warmed up and ready.")
 
     # Connect to inference server
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -68,7 +78,7 @@ def main(args):
     try:
         while True:
             # Read robot state
-            angles = mc.get_angles() or [0.0]*7
+            angles = mc.get_angles() or [0.0] * 7
             gripper_val = mc.get_gripper_value() or 0.0
 
             # Capture frame
@@ -83,23 +93,29 @@ def main(args):
             img_bytes = buf.tobytes()
             img_b64 = base64.b64encode(img_bytes).decode('ascii')
 
-            # Build message
+            # Build and send message
             msg = {
                 'angles': angles,
                 'gripper_value': [gripper_val],
                 'image': img_b64
             }
-
-            # Send and receive
             send_msg(sock, msg)
             print(f"Sent state: {angles} + {gripper_val} and image to server.")
 
+            # Receive predicted action
             reply = recv_msg(sock)
             if reply is None:
                 print("Server disconnected.")
                 break
             action = reply.get('action', [])
             print(f"Received action: {action}")
+
+            # Execute predicted action
+            pred_angles = action[:7]
+            pred_gripper = action[-1]
+            mc.send_angles(pred_angles, 50)
+            mc.set_gripper_value(int(pred_gripper), 80)
+            print(f"Executed action: angles={pred_angles}, gripper={pred_gripper}")
 
             time.sleep(args.interval)
 
