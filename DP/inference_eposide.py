@@ -88,7 +88,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, default=46272,
                         help='Inference server port (must match server)')
     parser.add_argument('--serial_port', type=str, default=None,
-                        help='Serial port for MyCobot (e.g., COM3 or /dev/ttyUSB0)')
+                        help='Serial port for MyCobot (e.g., COM3 or /dev/ttyAMA0)')
     parser.add_argument('--baud', type=int, default=1000000,
                         help='Baud rate for MyCobot')
     parser.add_argument('--interval', type=float, default=0.1,
