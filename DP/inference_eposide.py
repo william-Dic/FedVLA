@@ -83,7 +83,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Inference Client for MyCobot with Diffusion Service"
     )
-    parser.add_argument('--host', type=str, default='192.68.1.133',
+    parser.add_argument('--host', type=str, default='192.168.1.133',
                         help='Inference server IP')
     parser.add_argument('--port', type=int, default=46272,
                         help='Inference server port (must match server)')
